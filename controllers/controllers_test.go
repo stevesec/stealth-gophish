@@ -59,7 +59,7 @@ func setupTest(t *testing.T) *testContext {
 
 	ctx.apiKey = u.ApiKey
 	// Start the phishing server
-	ctx.phishServer = httptest.NewUnstartedServer(NewPhishingServer(ctx.config.PhishConf).server.Handler)
+	ctx.phishServer = httptest.NewUnstartedServer(NewPServer(ctx.config.PhishConf).server.Handler)
 	ctx.phishServer.Config.Addr = ctx.config.PhishConf.ListenURL
 	ctx.phishServer.Start()
 	// Move our cwd up to the project root for help with resolving
