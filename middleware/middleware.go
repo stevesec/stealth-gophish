@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	ctx "github.com/gophish/gophish/context"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 	"github.com/gorilla/csrf"
 )
 

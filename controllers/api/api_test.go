@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/gophish/gophish/config"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 )
 
 type testContext struct {

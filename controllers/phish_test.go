@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	"github.com/gophish/gophish/config"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 )
 
 func getFirstCampaign(t *testing.T) models.Campaign {

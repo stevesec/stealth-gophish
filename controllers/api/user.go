@@ -9,7 +9,7 @@ import (
 	"github.com/gophish/gophish/auth"
 	ctx "github.com/gophish/gophish/context"
 	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )

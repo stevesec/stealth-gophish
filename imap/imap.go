@@ -13,7 +13,7 @@ import (
 	"github.com/emersion/go-message/charset"
 	"github.com/gophish/gophish/dialer"
 	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 
 	"github.com/jordan-wright/email"
 )

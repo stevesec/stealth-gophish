@@ -7,7 +7,7 @@ import (
 
 	ctx "github.com/gophish/gophish/context"
 	"github.com/gophish/gophish/imap"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 )
 
 // IMAPServerValidate handles requests for the /api/imapserver/validate endpoint

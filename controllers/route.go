@@ -18,7 +18,7 @@ import (
 	log "github.com/gophish/gophish/logger"
 	mid "github.com/gophish/gophish/middleware"
 	"github.com/gophish/gophish/middleware/ratelimit"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 	"github.com/gophish/gophish/util"
 	"github.com/gophish/gophish/worker"
 	"github.com/gorilla/csrf"

@@ -40,7 +40,7 @@ import (
 	"github.com/gophish/gophish/imap"
 	log "github.com/gophish/gophish/logger"
 	"github.com/gophish/gophish/middleware"
-	"github.com/gophish/gophish/models"
+	"github.com/stevesec/gophish/models"
 	"github.com/gophish/gophish/webhook"
 )
 
