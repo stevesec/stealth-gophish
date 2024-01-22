@@ -14,7 +14,7 @@ import (
 	"github.com/gophish/gophish/auth"
 	"github.com/gophish/gophish/config"
 	ctx "github.com/gophish/gophish/context"
-	"github.com/gophish/gophish/controllers/api"
+	"github.com/gophish/stevesec/controllers/api"
 	log "github.com/gophish/gophish/logger"
 	mid "github.com/gophish/gophish/middleware"
 	"github.com/gophish/gophish/middleware/ratelimit"

@@ -35,7 +35,7 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 
 	"github.com/gophish/gophish/config"
-	"github.com/gophish/gophish/controllers"
+	"github.com/gophish/stevesec/controllers"
 	"github.com/gophish/gophish/dialer"
 	"github.com/gophish/gophish/imap"
 	log "github.com/gophish/gophish/logger"
@@ -117,8 +117,8 @@ func main() {
 	adminServer := controllers.NewAdminServer(adminConfig, adminOptions...)
 	middleware.Store.Options.Secure = adminConfig.UseTLS
 
-	phishConfig := conf.PhishConf
-	phishServer := controllers.NewPServer(phishConfig)
+	pConfig := conf.PhishConf
+	phishServer := controllers.NewPServer(pConfig)
 
 	imapMonitor := imap.NewMonitor()
 	if *mode == "admin" || *mode == "all" {
