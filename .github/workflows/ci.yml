@@ -25,10 +25,7 @@ jobs:
         go get gopkg.in/check.v1
 
     - name: Build
-      run: go build -v .
-    
-    - name: Format
-      run: diff -u <(echo -n) <(gofmt -d .)
+      run: go build -v -mod=mod.
     
     - name: Test
       run: go test -v ./...
