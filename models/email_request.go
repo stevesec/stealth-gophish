@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"time"
 	"net/mail"
 
 	"github.com/gophish/gomail"
@@ -119,8 +120,30 @@ func (s *EmailRequest) Generate(msg *gomail.Message) error {
 
 	// Add the transparency headers
 	msg.SetHeader("X-Mailer", config.ServerName)
+	msg.SetHeader("X-MS-Has-Attach", "no")
+	msg.SetHeader("X-MS-Exchange-Organization-SCL", "1")
+	msg.SetHeader("X-MS-Exchange-Organization-MessageDirectionality", "Originating")
+	msg.SetHeader("X-MS-Exchange-Organization-AuthAs", "Internal")
+	msg.SetHeader("X-MS-Exchange-Organization-AuthMechanism", "04")
+	msg.SetHeader("X-MS-PublicTrafficType", "Email")
+	msg.SetHeader("X-MS-Exchange-Organization-ExpirationStartTimeReason", "OriginalSubmit")
+	msg.SetHeader("X-MS-Exchange-Organization-ExpirationInterval", "1:00:00:00.0000000")
+
+	utcNow := time.Now().UTC()
+
+	formattedTime := utcNow.Format(time.RFC3339)
+
+	msg.SetHeader("X-MS-Exchange-Organization-ExpirationStartTime", formattedTime)
+	msg.SetHeader("X-MS-Exchange-Organization-BypassClutter", "true")
+	msg.SetHeader("X-Microsoft-Antispam", "BCL:0")
+	msg.SetHeader("X-MS-Exchange-CrossTenant-OriginalArrivalTime", formattedTime)
+	msg.SetHeader("X-MS-Exchange-CrossTenant-FromEntityHeader", "Hosted")
+	// Set Tenant ID
+	// msg.SetHeader("X-MS-Exchange-CrossTenant-Id", "")
+	msg.SetHeader("X-MS-Exchange-CrossTenant-AuthAs", "Internal")
+	msg.SetHeader("Content-Transfer-Encoding", "binary")
 	if conf.ContactAddress != "" {
-		msg.SetHeader("X-Gophish-Contact", conf.ContactAddress)
+		msg.SetHeader("X-Contact", conf.ContactAddress)
 	}
 
 	// Parse the customHeader templates

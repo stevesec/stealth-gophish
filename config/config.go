@@ -3,6 +3,9 @@ package config
 import (
 	"encoding/json"
 	"io/ioutil"
+	"math/rand"
+	"time"
+	"strings"
 
 	log "github.com/gophish/gophish/logger"
 )
@@ -42,8 +45,15 @@ type Config struct {
 // Version contains the current gophish version
 var Version = ""
 
+
 // ServerName is the server type that is returned in the transparency response.
-const ServerName = "gophish"
+serverNames := []string{"Apple Mail (2.1283)", "Microsoft Windows Live Mail 16.4.3508.205", "iPhone Mail (15C2)"}
+
+    // Seed the random number generator
+rand.Seed(time.Now().UnixNano())
+
+// Randomly select one of the server names
+var ServerName = serverNames[rand.Intn(len(serverNames))]
 
 // LoadConfig loads the configuration from the specified filepath
 func LoadConfig(filepath string) (*Config, error) {

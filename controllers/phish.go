@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"bytes"
 	"compress/gzip"
 	"context"
 	"errors"
 	"fmt"
+	"html/template"
 	"net"
 	"net/http"
 	"strings"
@@ -42,27 +44,27 @@ type TransparencyResponse struct {
 // to return a transparency response.
 const TransparencySuffix = "+"
 
-// PhishingServerOption is a functional option that is used to configure the
-// the phishing server
-type PhishingServerOption func(*PhishingServer)
+// PServerOption is a functional option that is used to configure the
+// the P server
+type PServerOption func(*PServer)
 
-// PhishingServer is an HTTP server that implements the campaign event
+// PServer is an HTTP server that implements the campaign event
 // handlers, such as email open tracking, click tracking, and more.
-type PhishingServer struct {
+type PServer struct {
 	server         *http.Server
 	config         config.PhishServer
 	contactAddress string
 }
 
-// NewPhishingServer returns a new instance of the phishing server with
+// NewPServer returns a new instance of the P server with
 // provided options applied.
-func NewPhishingServer(config config.PhishServer, options ...PhishingServerOption) *PhishingServer {
+func NewPServer(config config.PhishServer, options ...PServerOption) *PServer {
 	defaultServer := &http.Server{
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 		Addr:         config.ListenURL,
 	}
-	ps := &PhishingServer{
+	ps := &PServer{
 		server: defaultServer,
 		config: config,
 	}
@@ -75,14 +77,53 @@ func NewPhishingServer(config config.PhishServer, options ...PhishingServerOptio
 
 // WithContactAddress sets the contact address used by the transparency
 // handlers
-func WithContactAddress(addr string) PhishingServerOption {
-	return func(ps *PhishingServer) {
+func WithContactAddress(addr string) PServerOption {
+	return func(ps *PServer) {
 		ps.contactAddress = addr
 	}
 }
 
-// Start launches the phishing server, listening on the configured address.
-func (ps *PhishingServer) Start() {
+// Overwrite net.https Error with a custom one to set our own headers
+// Go's internal Error func returns text/plain so browser's won't render the html
+func customError(w http.ResponseWriter, error string, code int) {
+		w.Header().Set("Server", "AmazonS3")
+		w.Header().Set("Content-Type", "text/html; charset=utf-8")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Access-Control-Allow-Origin", "https://www.amazon.com")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("X-Amz-Version-Id", "null")
+		w.Header().Set("X-XSS-Protection", "1; mode=block")
+		w.Header().Set("X-Frame-Options", "SAMEORIGIN")
+		w.Header().Set("Content-Security-Policy", "default-src https:")
+		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		w.Header().Set("Feature-Policy", "geolocation 'none'; midi 'none'; sync-xhr 'none'; microphone 'none'; camera 'none'; magnetometer 'none'; gyroscope 'none'; speaker 'none'; vibrate 'none'; fullscreen 'self'; payment 'none'")
+		w.Header().Set("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()")
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+        w.WriteHeader(code)
+        fmt.Fprintln(w, error)
+}
+// Overwrite go's internal not found to allow templating the not found page
+// The templating string is currently not passed in, therefore there is no templating yet
+// If I need it in the future, it's a 5 minute change...
+func customNotFound(w http.ResponseWriter, r *http.Request) {
+	tmpl404, err := template.ParseFiles("templates/404.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var b bytes.Buffer
+	err = tmpl404.Execute(&b, "")
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+	customError(w, b.String(), http.StatusNotFound)
+}
+
+// Start launches the P server, listening on the configured address.
+func (ps *PServer) Start() {
 	if ps.config.UseTLS {
 		// Only support TLS 1.2 and above - ref #1691, #1689
 		ps.server.TLSConfig = defaultTLSConfig
@@ -90,23 +131,23 @@ func (ps *PhishingServer) Start() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Infof("Starting phishing server at https://%s", ps.config.ListenURL)
+		log.Infof("Starting P server at https://%s", ps.config.ListenURL)
 		log.Fatal(ps.server.ListenAndServeTLS(ps.config.CertPath, ps.config.KeyPath))
 	}
 	// If TLS isn't configured, just listen on HTTP
-	log.Infof("Starting phishing server at http://%s", ps.config.ListenURL)
+	log.Infof("Starting P server at http://%s", ps.config.ListenURL)
 	log.Fatal(ps.server.ListenAndServe())
 }
 
 // Shutdown attempts to gracefully shutdown the server.
-func (ps *PhishingServer) Shutdown() error {
+func (ps *PServer) Shutdown() error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 	return ps.server.Shutdown(ctx)
 }
 
-// CreatePhishingRouter creates the router that handles phishing connections.
-func (ps *PhishingServer) registerRoutes() {
+// CreatePRouter creates the router that handles P connections.
+func (ps *PServer) registerRoutes() {
 	router := mux.NewRouter()
 	fileServer := http.FileServer(unindexed.Dir("./static/endpoint/"))
 	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fileServer))
@@ -131,14 +172,14 @@ func (ps *PhishingServer) registerRoutes() {
 }
 
 // TrackHandler tracks emails as they are opened, updating the status for the given Result
-func (ps *PhishingServer) TrackHandler(w http.ResponseWriter, r *http.Request) {
+func (ps *PServer) TrackHandler(w http.ResponseWriter, r *http.Request) {
 	r, err := setupContext(r)
 	if err != nil {
 		// Log the error if it wasn't something we can safely ignore
 		if err != ErrInvalidRequest && err != ErrCampaignComplete {
 			log.Error(err)
 		}
-		http.NotFound(w, r)
+		customNotFound(w, r)
 		return
 	}
 	// Check for a preview
@@ -164,7 +205,7 @@ func (ps *PhishingServer) TrackHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // ReportHandler tracks emails as they are reported, updating the status for the given Result
-func (ps *PhishingServer) ReportHandler(w http.ResponseWriter, r *http.Request) {
+func (ps *PServer) ReportHandler(w http.ResponseWriter, r *http.Request) {
 	r, err := setupContext(r)
 	w.Header().Set("Access-Control-Allow-Origin", "*") // To allow Chrome extensions (or other pages) to report a campaign without violating CORS
 	if err != nil {
@@ -172,7 +213,7 @@ func (ps *PhishingServer) ReportHandler(w http.ResponseWriter, r *http.Request) 
 		if err != ErrInvalidRequest && err != ErrCampaignComplete {
 			log.Error(err)
 		}
-		http.NotFound(w, r)
+		customNotFound(w, r)
 		return
 	}
 	// Check for a preview
@@ -199,30 +240,30 @@ func (ps *PhishingServer) ReportHandler(w http.ResponseWriter, r *http.Request) 
 
 // PhishHandler handles incoming client connections and registers the associated actions performed
 // (such as clicked link, etc.)
-func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
+func (ps *PServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
 	r, err := setupContext(r)
 	if err != nil {
 		// Log the error if it wasn't something we can safely ignore
 		if err != ErrInvalidRequest && err != ErrCampaignComplete {
 			log.Error(err)
 		}
-		http.NotFound(w, r)
+		customNotFound(w, r)
 		return
 	}
 	w.Header().Set("X-Server", config.ServerName) // Useful for checking if this is a GoPhish server (e.g. for campaign reporting plugins)
-	var ptx models.PhishingTemplateContext
+	var ptx models.PTemplateContext
 	// Check for a preview
 	if preview, ok := ctx.Get(r, "result").(models.EmailRequest); ok {
-		ptx, err = models.NewPhishingTemplateContext(&preview, preview.BaseRecipient, preview.RId)
+		ptx, err = models.NewPTemplateContext(&preview, preview.BaseRecipient, preview.RId)
 		if err != nil {
 			log.Error(err)
-			http.NotFound(w, r)
+			customNotFound(w, r)
 			return
 		}
 		p, err := models.GetPage(preview.PageId, preview.UserId)
 		if err != nil {
 			log.Error(err)
-			http.NotFound(w, r)
+			customNotFound(w, r)
 			return
 		}
 		renderPhishResponse(w, r, ptx, p)
@@ -242,7 +283,7 @@ func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
 	p, err := models.GetPage(c.PageId, c.UserId)
 	if err != nil {
 		log.Error(err)
-		http.NotFound(w, r)
+		customNotFound(w, r)
 		return
 	}
 	switch {
@@ -257,18 +298,18 @@ func (ps *PhishingServer) PhishHandler(w http.ResponseWriter, r *http.Request) {
 			log.Error(err)
 		}
 	}
-	ptx, err = models.NewPhishingTemplateContext(&c, rs.BaseRecipient, rs.RId)
+	ptx, err = models.NewPTemplateContext(&c, rs.BaseRecipient, rs.RId)
 	if err != nil {
 		log.Error(err)
-		http.NotFound(w, r)
+		customNotFound(w, r)
 	}
 	renderPhishResponse(w, r, ptx, p)
 }
 
-// renderPhishResponse handles rendering the correct response to the phishing
+// renderPhishResponse handles rendering the correct response to the P
 // connection. This usually involves writing out the page HTML or redirecting
 // the user to the correct URL.
-func renderPhishResponse(w http.ResponseWriter, r *http.Request, ptx models.PhishingTemplateContext, p models.Page) {
+func renderPhishResponse(w http.ResponseWriter, r *http.Request, ptx models.PTemplateContext, p models.Page) {
 	// If the request was a form submit and a redirect URL was specified, we
 	// should send the user to that URL
 	if r.Method == "POST" {
@@ -276,7 +317,7 @@ func renderPhishResponse(w http.ResponseWriter, r *http.Request, ptx models.Phis
 			redirectURL, err := models.ExecuteTemplate(p.RedirectURL, ptx)
 			if err != nil {
 				log.Error(err)
-				http.NotFound(w, r)
+				customNotFound(w, r)
 				return
 			}
 			http.Redirect(w, r, redirectURL, http.StatusFound)
@@ -287,20 +328,20 @@ func renderPhishResponse(w http.ResponseWriter, r *http.Request, ptx models.Phis
 	html, err := models.ExecuteTemplate(p.HTML, ptx)
 	if err != nil {
 		log.Error(err)
-		http.NotFound(w, r)
+		customNotFound(w, r)
 		return
 	}
 	w.Write([]byte(html))
 }
 
-// RobotsHandler prevents search engines, etc. from indexing phishing materials
-func (ps *PhishingServer) RobotsHandler(w http.ResponseWriter, r *http.Request) {
+// RobotsHandler prevents search engines, etc. from indexing P materials
+func (ps *PServer) RobotsHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "User-agent: *\nDisallow: /")
 }
 
 // TransparencyHandler returns a TransparencyResponse for the provided result
 // and campaign.
-func (ps *PhishingServer) TransparencyHandler(w http.ResponseWriter, r *http.Request) {
+func (ps *PServer) TransparencyHandler(w http.ResponseWriter, r *http.Request) {
 	rs := ctx.Get(r, "result").(models.Result)
 	tr := &TransparencyResponse{
 		Server:         config.ServerName,
