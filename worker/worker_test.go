@@ -8,7 +8,7 @@ import (
 
 	"github.com/gophish/gophish/config"
 	"github.com/gophish/gophish/mailer"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 )
 
 type logMailer struct {

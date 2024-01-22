@@ -19,7 +19,7 @@ import (
 	"time"
 
 	log "github.com/gophish/gophish/logger"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 	"github.com/jordan-wright/email"
 )
 

@@ -3,7 +3,7 @@ package middleware
 import (
 	"encoding/gob"
 
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
 )

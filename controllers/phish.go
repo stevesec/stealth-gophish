@@ -17,7 +17,7 @@ import (
 	ctx "github.com/gophish/gophish/context"
 	"github.com/gophish/gophish/controllers/api"
 	log "github.com/gophish/gophish/logger"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 	"github.com/gophish/gophish/util"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/gophish/gophish/auth"
 	ctx "github.com/gophish/gophish/context"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 )
 
 // Reset (/api/reset) resets the currently authenticated user's API key

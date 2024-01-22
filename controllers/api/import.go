@@ -12,7 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gophish/gophish/dialer"
 	log "github.com/gophish/gophish/logger"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 	"github.com/gophish/gophish/util"
 	"github.com/jordan-wright/email"
 )

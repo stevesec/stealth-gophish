@@ -1,4 +1,4 @@
-module github.com/stevesec/gophish
+module github.com/stevesec/stealth-gophish
 
 go 1.13
 

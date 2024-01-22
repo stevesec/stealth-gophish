@@ -18,7 +18,7 @@ import (
 	log "github.com/gophish/gophish/logger"
 	"github.com/jordan-wright/email"
 
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 )
 
 // Pattern for GoPhish emails e.g ?rid=AbC1234

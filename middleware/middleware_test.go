@@ -8,7 +8,7 @@ import (
 
 	"github.com/gophish/gophish/config"
 	ctx "github.com/gophish/gophish/context"
-	"github.com/stevesec/gophish/models"
+	"github.com/stevesec/stealth-gophish/models"
 )
 
 var successHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
