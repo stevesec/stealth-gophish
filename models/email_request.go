@@ -107,7 +107,7 @@ func (s *EmailRequest) Generate(msg *gomail.Message) error {
 	}
 	msg.SetAddressHeader("From", f.Address, f.Name)
 
-	ptx, err := NewPhishingTemplateContext(s, s.BaseRecipient, s.RId)
+	ptx, err := NewPTemplateContext(s, s.BaseRecipient, s.RId)
 	if err != nil {
 		return err
 	}

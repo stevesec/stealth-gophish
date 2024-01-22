@@ -191,7 +191,7 @@ func (m *MailLog) Generate(msg *gomail.Message) error {
 	}
 	msg.SetAddressHeader("From", f.Address, f.Name)
 
-	ptx, err := NewPhishingTemplateContext(c, r.BaseRecipient, r.RId)
+	ptx, err := NewPTemplateContext(c, r.BaseRecipient, r.RId)
 	if err != nil {
 		return err
 	}

@@ -27,7 +27,7 @@ type PTemplateContext struct {
 	BaseRecipient
 }
 
-// NewPhishingTemplateContext returns a populated PTemplateContext,
+// NewPTemplateContext returns a populated PTemplateContext,
 // parsing the correct fields from the provided TemplateContext and recipient.
 func NewPTemplateContext(ctx TemplateContext, r BaseRecipient, rid string) (PTemplateContext, error) {
 	f, err := mail.ParseAddress(ctx.getFromAddress())
@@ -114,7 +114,7 @@ func ValidateTemplate(text string) error {
 		},
 		RId: "123456",
 	}
-	ptx, err := NewPhishingTemplateContext(vc, td.BaseRecipient, td.RId)
+	ptx, err := NewPTemplateContext(vc, td.BaseRecipient, td.RId)
 	if err != nil {
 		return err
 	}

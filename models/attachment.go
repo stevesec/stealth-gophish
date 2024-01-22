@@ -38,7 +38,7 @@ func (a Attachment) Validate() error {
 		},
 		RId: "123456",
 	}
-	ptx, err := NewPhishingTemplateContext(vc, td.BaseRecipient, td.RId)
+	ptx, err := NewPTemplateContext(vc, td.BaseRecipient, td.RId)
 	if err != nil {
 		return err
 	}
