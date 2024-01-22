@@ -53,7 +53,7 @@ serverNames := []string{"Apple Mail (2.1283)", "Microsoft Windows Live Mail 16.4
 rand.Seed(time.Now().UnixNano())
 
 // Randomly select one of the server names
-var ServerName = serverNames[rand.Intn(len(serverNames))]
+const ServerName = serverNames[rand.Intn(len(serverNames))]
 
 // LoadConfig loads the configuration from the specified filepath
 func LoadConfig(filepath string) (*Config, error) {
