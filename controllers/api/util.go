@@ -7,7 +7,7 @@ import (
 
 	ctx "github.com/gophish/gophish/context"
 	log "github.com/gophish/gophish/logger"
-	"github.com/stevesec/gophish/models"
+	"github.com/gophish/gophish/models"
 	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )
