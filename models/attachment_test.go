@@ -14,7 +14,7 @@ import (
 )
 
 func (s *ModelsSuite) TestAttachment(c *check.C) {
-	ptx := PhishingTemplateContext{
+	ptx := PTemplateContext{
 		BaseRecipient: BaseRecipient{
 			FirstName: "Foo",
 			LastName:  "Bar",

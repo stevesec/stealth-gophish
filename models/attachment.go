@@ -47,7 +47,7 @@ func (a Attachment) Validate() error {
 }
 
 // ApplyTemplate parses different attachment files and applies the supplied phishing template.
-func (a *Attachment) ApplyTemplate(ptx PhishingTemplateContext) (io.Reader, error) {
+func (a *Attachment) ApplyTemplate(ptx PTemplateContext) (io.Reader, error) {
 
 	decodedAttachment := base64.NewDecoder(base64.StdEncoding, strings.NewReader(a.Content))
 

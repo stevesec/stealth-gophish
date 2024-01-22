@@ -344,7 +344,7 @@ func shouldEmbedAttachment(name string) bool {
 
 // Add an attachment to a gomail message, with the Content-Disposition
 // header set to inline or attachment depending on its file extension.
-func addAttachment(msg *gomail.Message, a Attachment, ptx PhishingTemplateContext) {
+func addAttachment(msg *gomail.Message, a Attachment, ptx PTemplateContext) {
 	copyFunc := gomail.SetCopyFunc(func(c Attachment) func(w io.Writer) error {
 		return func(w io.Writer) error {
 			reader, err := a.ApplyTemplate(ptx)

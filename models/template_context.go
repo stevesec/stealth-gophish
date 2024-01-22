@@ -9,15 +9,15 @@ import (
 )
 
 // TemplateContext is an interface that allows both campaigns and email
-// requests to have a PhishingTemplateContext generated for them.
+// requests to have a PTemplateContext generated for them.
 type TemplateContext interface {
 	getFromAddress() string
 	getBaseURL() string
 }
 
-// PhishingTemplateContext is the context that is sent to any template, such
+// PTemplateContext is the context that is sent to any template, such
 // as the email or landing page content.
-type PhishingTemplateContext struct {
+type PTemplateContext struct {
 	From        string
 	URL         string
 	Tracker     string
@@ -27,12 +27,12 @@ type PhishingTemplateContext struct {
 	BaseRecipient
 }
 
-// NewPhishingTemplateContext returns a populated PhishingTemplateContext,
+// NewPhishingTemplateContext returns a populated PTemplateContext,
 // parsing the correct fields from the provided TemplateContext and recipient.
-func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string) (PhishingTemplateContext, error) {
+func NewPTemplateContext(ctx TemplateContext, r BaseRecipient, rid string) (PTemplateContext, error) {
 	f, err := mail.ParseAddress(ctx.getFromAddress())
 	if err != nil {
-		return PhishingTemplateContext{}, err
+		return PTemplateContext{}, err
 	}
 	fn := f.Name
 	if fn == "" {
@@ -40,14 +40,14 @@ func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string
 	}
 	templateURL, err := ExecuteTemplate(ctx.getBaseURL(), r)
 	if err != nil {
-		return PhishingTemplateContext{}, err
+		return PTemplateContext{}, err
 	}
 
 	// For the base URL, we'll reset the the path and the query
 	// This will create a URL in the form of http://example.com
 	baseURL, err := url.Parse(templateURL)
 	if err != nil {
-		return PhishingTemplateContext{}, err
+		return PTemplateContext{}, err
 	}
 	baseURL.Path = ""
 	baseURL.RawQuery = ""
@@ -61,7 +61,7 @@ func NewPhishingTemplateContext(ctx TemplateContext, r BaseRecipient, rid string
 	trackingURL.Path = path.Join(trackingURL.Path, "/track")
 	trackingURL.RawQuery = q.Encode()
 
-	return PhishingTemplateContext{
+	return PTemplateContext{
 		BaseRecipient: r,
 		BaseURL:       baseURL.String(),
 		URL:           phishURL.String(),
