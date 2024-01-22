@@ -3,10 +3,10 @@ package api
 import (
 	"net/http"
 
-	mid "github.com/gophish/gophish/middleware"
-	"github.com/gophish/gophish/middleware/ratelimit"
+	mid "github.com/stevesec/stealth-gophish/middleware"
+	"github.com/stevesec/stealth-gophish/middleware/ratelimit"
 	"github.com/stevesec/stealth-gophish/models"
-	"github.com/gophish/gophish/worker"
+	"github.com/stevesec/stealth-gophish/worker"
 	"github.com/gorilla/mux"
 )
 

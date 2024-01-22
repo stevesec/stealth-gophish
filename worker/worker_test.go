@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gophish/gophish/config"
-	"github.com/gophish/gophish/mailer"
+	"github.com/stevesec/stealth-gophish/config"
+	"github.com/stevesec/stealth-gophish/mailer"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

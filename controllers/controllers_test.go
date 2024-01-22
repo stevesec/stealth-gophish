@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/gophish/gophish/auth"
-	"github.com/gophish/gophish/config"
+	"github.com/stevesec/stealth-gophish/auth"
+	"github.com/stevesec/stealth-gophish/config"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

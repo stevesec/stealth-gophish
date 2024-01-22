@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"github.com/gophish/gophish/auth"
-	ctx "github.com/gophish/gophish/context"
+	"github.com/stevesec/stealth-gophish/auth"
+	ctx "github.com/stevesec/stealth-gophish/context"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

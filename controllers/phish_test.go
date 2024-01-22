@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/gophish/gophish/config"
+	"github.com/stevesec/stealth-gophish/config"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

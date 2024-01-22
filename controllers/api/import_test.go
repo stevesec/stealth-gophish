@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gophish/gophish/dialer"
+	"github.com/stevesec/stealth-gophish/dialer"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

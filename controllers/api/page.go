@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	ctx "github.com/gophish/gophish/context"
-	log "github.com/gophish/gophish/logger"
+	ctx "github.com/stevesec/stealth-gophish/context"
+	log "github.com/stevesec/stealth-gophish/logger"
 	"github.com/stevesec/stealth-gophish/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"

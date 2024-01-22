@@ -18,7 +18,7 @@ import (
 	"regexp"
 	"time"
 
-	log "github.com/gophish/gophish/logger"
+	log "github.com/stevesec/stealth-gophish/logger"
 	"github.com/stevesec/stealth-gophish/models"
 	"github.com/jordan-wright/email"
 )

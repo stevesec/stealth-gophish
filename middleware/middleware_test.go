@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/gophish/gophish/config"
-	ctx "github.com/gophish/gophish/context"
+	"github.com/stevesec/stealth-gophish/config"
+	ctx "github.com/stevesec/stealth-gophish/context"
 	"github.com/stevesec/stealth-gophish/models"
 )
 

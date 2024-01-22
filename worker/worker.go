@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/mailer"
+	log "github.com/stevesec/stealth-gophish/logger"
+	"github.com/stevesec/stealth-gophish/mailer"
 	"github.com/stevesec/stealth-gophish/models"
 	"github.com/sirupsen/logrus"
 )

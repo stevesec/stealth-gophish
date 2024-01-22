@@ -11,9 +11,9 @@ import (
 	"time"
 
 	"github.com/gophish/gomail"
-	"github.com/gophish/gophish/dialer"
-	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/mailer"
+	"github.com/stevesec/stealth-gophish/dialer"
+	log "github.com/stevesec/stealth-gophish/logger"
+	"github.com/stevesec/stealth-gophish/mailer"
 	"github.com/jinzhu/gorm"
 )
 

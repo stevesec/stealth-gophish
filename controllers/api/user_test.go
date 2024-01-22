@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	ctx "github.com/gophish/gophish/context"
+	ctx "github.com/stevesec/stealth-gophish/context"
 	"github.com/stevesec/stealth-gophish/models"
 )
 
