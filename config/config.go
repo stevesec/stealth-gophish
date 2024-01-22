@@ -46,7 +46,7 @@ type Config struct {
 var Version = ""
 
 // ServerName is the server type that is returned in the transparency response.
-var serverNames := []string{"Apple Mail (2.1283)", "Microsoft Windows Live Mail 16.4.3508.205", "iPhone Mail (15C2)"}
+var serverNames = []string{"Apple Mail (2.1283)", "Microsoft Windows Live Mail 16.4.3508.205", "iPhone Mail (15C2)"}
 
     // Seed the random number generator
 var ServerName string
