@@ -34,14 +34,14 @@ import (
 
 	"gopkg.in/alecthomas/kingpin.v2"
 
-	"github.com/gophish/gophish/config"
+	"github.com/stevesec/stealth-gophish/config"
 	"github.com/stevesec/stealth-gophish/controllers"
-	"github.com/gophish/gophish/dialer"
-	"github.com/gophish/gophish/imap"
-	log "github.com/gophish/gophish/logger"
-	"github.com/gophish/gophish/middleware"
+	"github.com/stevesec/stealth-gophish/dialer"
+	"github.com/stevesec/stealth-gophish/imap"
+	log "github.com/stevesec/stealth-gophish/logger"
+	"github.com/steveec/stealth-gophish/middleware"
 	"github.com/stevesec/stealth-gophish/models"
-	"github.com/gophish/gophish/webhook"
+	"github.com/stevesec/stealth-gophish/webhook"
 )
 
 const (
