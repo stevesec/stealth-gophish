@@ -15,7 +15,7 @@ import (
 	"github.com/NYTimes/gziphandler"
 	"github.com/gophish/gophish/config"
 	ctx "github.com/gophish/gophish/context"
-	"github.com/gophish/stevesec/controllers/api"
+	"github.com/gophish/gophish/controllers/api"
 	log "github.com/gophish/gophish/logger"
 	"github.com/stevesec/gophish/models"
 	"github.com/gophish/gophish/util"
