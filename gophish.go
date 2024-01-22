@@ -39,7 +39,7 @@ import (
 	"github.com/stevesec/stealth-gophish/dialer"
 	"github.com/stevesec/stealth-gophish/imap"
 	log "github.com/stevesec/stealth-gophish/logger"
-	"github.com/steveec/stealth-gophish/middleware"
+	"github.com/stevesec/stealth-gophish/middleware"
 	"github.com/stevesec/stealth-gophish/models"
 	"github.com/stevesec/stealth-gophish/webhook"
 )
