@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"time"
-	"strings"
 
 	log "github.com/gophish/gophish/logger"
 )
